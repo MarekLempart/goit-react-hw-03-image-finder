@@ -11,7 +11,7 @@ export const getSearchImages = (query, page) => {
       q: query,
       image_type: 'photo',
       orientation: 'horizontal',
-      // safesearch: true,
+      safesearch: true,
       page: page,
       per_page: PER_PAGE,
     },
