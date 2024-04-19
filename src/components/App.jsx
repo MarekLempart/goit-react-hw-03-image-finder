@@ -1,3 +1,5 @@
+// App.js
+
 import { Button } from 'components/Button/Button'; // Przycisk
 import { Loader } from 'components/Loader/Loader'; // Wskaźnik ładowania
 import { Component } from 'react';
