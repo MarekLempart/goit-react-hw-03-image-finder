@@ -9,9 +9,8 @@ export const ImageGallery = ({ images, togleModal }) => {
   return (
     <>
       <ul className={css.ImageGallery}>
-        {' '}
         {/* Utwórz listę ul z klasą galerii */}
-        <ImageGalleryItem togleModal={togleModal} images={images} />{' '}
+        <ImageGalleryItem togleModal={togleModal} images={images} />
         {/* Renderuj komponent ImageGalleryItem z przekazanymi propsami */}
       </ul>
     </>

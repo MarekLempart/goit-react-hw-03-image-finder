@@ -47,7 +47,7 @@
   opacity: 1;
 }
 
-.SearchFormButton-label {
+/* .SearchFormButton-label {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -57,7 +57,7 @@
   white-space: nowrap;
   clip-path: inset(50%);
   border: 0;
-}
+} */
 
 .SearchFormInput {
   display: inline-block;

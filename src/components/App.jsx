@@ -32,11 +32,11 @@ export class App extends Component {
   }
 
   // Funkcja do pobrania danych
-  getFunc = (text, page) => {
+  getFunc = (query, page) => {
     this.setState({ loading: true }); // Włączenie wskaźnika ładowania
 
     // Wywołanie funkcji getSearch, która wysyła zapytanie do serwera
-    getSearchImages(text, page)
+    getSearchImages(query, page)
       .then(resp => resp.json()) // Konwersja odpowiedzi na format JSON
       .then(data => {
         // Sprawdzenie czy lista wyników wyszukiwania jest pusta
