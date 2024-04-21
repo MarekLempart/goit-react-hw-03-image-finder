@@ -6,7 +6,8 @@ import { Component } from 'react';
 import { Toaster } from 'react-hot-toast'; // Komponent do obsługi spływających powiadomień
 import { getSearchImages } from './Api/getSearch'; // Funkcja do pobierania danych wyszukiwania
 import { ImageGallery } from './ImageGallery/ImageGallery'; // Galeria obrazków
-import { Modal } from './Modal/Modal'; // Moda
+// import { Modal } from './Modal/Modal'; // Moda
+import Modal from './Modal/Modal';
 import { Searchbar } from './Searchbar/Searchbar'; // Pasek wyszukiwania
 export class App extends Component {
   state = {
@@ -18,6 +19,8 @@ export class App extends Component {
     error: null, // Błąd, jeśli wystąpił
     showModal: false, // Flaga określająca czy modal jest widoczny
     empty: false, // Flaga informująca czy lista obrazków jest pusta
+    largeImageURL: '', //Duże obrazki do Modala
+    alt: '',
   };
 
   componentDidUpdate(_, PrevState) {
@@ -39,14 +42,21 @@ export class App extends Component {
     getSearchImages(query, page)
       .then(resp => resp.json()) // Konwersja odpowiedzi na format JSON
       .then(data => {
+        const newImages = data.hits.filter(
+          newImage =>
+            !this.state.images.some(
+              existingImage => existingImage.id === newImage.id
+            )
+        );
         // Sprawdzenie czy lista wyników wyszukiwania jest pusta
         if (data.hits.length === 0) {
           this.setState({ empty: true }); // Ustawienie flagi informującej o pustej liście
         }
         // Aktualizacja stanu aplikacji o nowe dane
-        this.setState(prevSt => ({
-          page: prevSt.page,
-          images: [...prevSt.images, ...data.hits], // Dodanie nowych obrazków do listy
+        this.setState(prevState => ({
+          page: prevState.page,
+          // images: [...prevState.images, ...data.hits], // Dodanie nowych obrazków do listy
+          images: [...prevState.images, ...newImages],
           total: data.total,
         }));
       })
@@ -60,16 +70,21 @@ export class App extends Component {
 
   // Obsługa kliknięcia przycisku "Load more"
   clickLoad = () => {
-    this.setState(prevSt => ({
-      page: prevSt.page + 1, // Zwiększenie numeru strony o 1
+    this.setState(prevState => ({
+      page: prevState.page + 1, // Zwiększenie numeru strony o 1
     }));
   };
 
   // Obsługa otwierania modala
   openModal = (largeImageURL, alt) => {
     // Aktualizacja stanu aplikacji w zależności od poprzedniego stanu
-    this.setState(({ showModal }) => {
-      return { showModal: !showModal, largeImageURL, alt };
+    // this.setState(({ showModal }) => {
+    //   return { showModal: !showModal, largeImageURL, alt };
+    // });
+    this.setState({
+      showModal: true,
+      largeImageURL,
+      alt,
     });
   };
 
@@ -90,13 +105,27 @@ export class App extends Component {
   // Obsługa zamknięcia modala
   closeModal = () => {
     // Aktualizacja stanu aplikacji w zależności od poprzedniego stanu
-    this.setState(({ showModal }) => {
-      return { showModal: !showModal };
+    // this.setState(({ showModal }) => {
+    //   return { showModal: !showModal };
+    // });
+    this.setState({
+      showModal: false,
+      largeImageURL: '',
+      alt: '',
     });
   };
 
   render() {
-    const { error, loading, images, total, page } = this.state;
+    const {
+      error,
+      loading,
+      images,
+      total,
+      page,
+      showModal,
+      largeImageURL,
+      alt,
+    } = this.state;
     return (
       <div>
         {/* Komponent do obsługi spływających powiadomień */}
@@ -133,11 +162,17 @@ export class App extends Component {
         {total / 12 > page && <Button clickLoad={this.clickLoad} />}
 
         {/* Modal */}
-        {this.state.showModal && (
+        {/* {this.state.showModal && (
           <Modal closeModal={this.closeModal}>
             <img src={this.state.largeImageURL} alt={this.state.alt} />
-          </Modal>
-        )}
+          </Modal> */}
+        {/* )} */}
+        <Modal
+          showModal={showModal}
+          closeModal={this.closeModal}
+          largeImageURL={largeImageURL}
+          alt={alt}
+        />
       </div>
     );
   }

@@ -1,9 +1,9 @@
 // Button.jsx
 
 import css from './Button.module.css';
-export const Button = ({ clickLoader }) => {
+export const Button = ({ clickLoad }) => {
   return (
-    <button onClick={clickLoader} className={css.Button} type="button">
+    <button onClick={clickLoad} className={css.Button} type="button">
       Load more
     </button>
   );

@@ -11,7 +11,7 @@ export const Loader = () => {
       ariaLabel="blocks-loading"
       wrapperStyle={{
         display: 'block',
-        marginTop: 20,
+        marginTop: -25,
         marginLeft: 'auto',
         marginRight: 'auto',
       }}

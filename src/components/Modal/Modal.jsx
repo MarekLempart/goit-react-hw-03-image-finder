@@ -1,49 +1,90 @@
 // Modal.jsx
 
-import { Component } from 'react';
-import { createPortal } from 'react-dom'; // Import funkcji createPortal z biblioteki react-dom
+// import * as basicLightbox from 'basiclightbox';
+// import { useEffect, useRef } from 'react';
+// import css from './Modal.module.css';
+
+// const Modal = ({ showModal, closeModal, largeImageURL, alt }) => {
+//   const modalRef = useRef(null);
+
+//   useEffect(() => {
+//     const handleOutsideClick = evt => {
+//       if (modalRef.current && !modalRef.current.contains(evt.target)) {
+//         closeModal();
+//       }
+//     };
+
+//     const handleEscPress = evt => {
+//       if (evt.keyCode === 27) {
+//         closeModal();
+//       }
+//     };
+
+//     if (showModal) {
+//       document.addEventListener('mousedown', handleOutsideClick);
+//       document.addEventListener('keydown', handleEscPress);
+
+//       const instance = basicLightbox.create(`
+//         <img src="${largeImageURL}" alt="${alt}" />
+//       `);
+//       instance.show();
+
+//       return () => {
+//         document.removeEventListener('mousedown', handleOutsideClick);
+//         document.removeEventListener('keydown', handleEscPress);
+//         instance.close();
+//       };
+//     }
+//   }, [showModal, largeImageURL, alt, closeModal]);
+
+//   if (!showModal) return null;
+
+//   return (
+//     <div className={css.Overlay}>
+//       <div className={css.Modal} ref={modalRef}>
+//         <img src={largeImageURL} alt={alt} />
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Modal;
+
+import { useEffect } from 'react';
 import css from './Modal.module.css';
 
-// Znajdź element z id 'modal-root' w drzewie DOM
-const modalRoot = document.querySelector('#modal-root');
+const Modal = ({ showModal, closeModal, largeImageURL, alt }) => {
+  useEffect(() => {
+    const handleEscPress = evt => {
+      if (evt.keyCode === 27) {
+        closeModal();
+      }
+    };
 
-// Deklaracja klasy komponentu Modal, rozszerzająca klasę Component
-export class Modal extends Component {
-  // Metoda cyklu życia komponentu, wywoływana po zamontowaniu komponentu
-  componentDidMount() {
-    window.addEventListener('keydown', this.keyDown); // Dodaj obsługę zdarzenia keydown na oknie przeglądarki
-  }
+    const handleKeyDown = evt => {
+      handleEscPress(evt);
+    };
 
-  // Metoda obsługująca zdarzenie naciśnięcia klawisza na klawiaturze
-  keyDown = evt => {
-    // Sprawdź, czy naciśnięty został klawisz Escape
-    if (evt.code === 'Escape') {
-      this.props.closeModal(); // Wywołaj funkcję closeModal przekazaną jako props
+    if (showModal) {
+      document.body.style.overflow = 'hidden'; // Zablokowanie przewijania strony podczas wyświetlania modala
+      document.addEventListener('keydown', handleKeyDown);
+
+      return () => {
+        document.body.style.overflow = 'auto'; // Przywrócenie normalnego przewijania strony po zamknięciu modala
+        document.removeEventListener('keydown', handleKeyDown);
+      };
     }
-  };
+  }, [showModal, closeModal]);
 
-  // Metoda cyklu życia komponentu, wywoływana przed odmontowaniem komponentu
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.keyDown); // Usuń obsługę zdarzenia keydown z okna przeglądarki
-  }
+  if (!showModal) return null;
 
-  // Metoda obsługująca zamknięcie modala po kliknięciu na tło (backdrop)
-  handleClose = evt => {
-    // Sprawdź, czy kliknięcie nastąpiło na backdropie
-    if (evt.currentTarget === evt.target) {
-      this.props.closeModal(); // Wywołaj funkcję closeModal przekazaną jako props
-    }
-  };
+  return (
+    <div className={css.Overlay} onClick={closeModal}>
+      <div className={css.Modal}>
+        <img src={largeImageURL} alt={alt} />
+      </div>
+    </div>
+  );
+};
 
-  // Metoda renderująca komponent Modal
-  render() {
-    // Wykorzystaj funkcję createPortal do renderowania modala w innym miejscu w drzewie DOM
-    return createPortal(
-      <div onClick={this.handleClose} className={css.Overlay}>
-        <div className={css.Modal}>{this.props.children}</div>{' '}
-        {/* Renderuj zawartość modala */}
-      </div>,
-      modalRoot // Renderuj w elemencie modalRoot
-    );
-  }
-}
+export default Modal;
