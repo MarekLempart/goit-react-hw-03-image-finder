@@ -78,9 +78,6 @@ export class App extends Component {
   // Obsługa otwierania modala
   openModal = (largeImageURL, alt) => {
     // Aktualizacja stanu aplikacji w zależności od poprzedniego stanu
-    // this.setState(({ showModal }) => {
-    //   return { showModal: !showModal, largeImageURL, alt };
-    // });
     this.setState({
       showModal: true,
       largeImageURL,
@@ -105,9 +102,6 @@ export class App extends Component {
   // Obsługa zamknięcia modala
   closeModal = () => {
     // Aktualizacja stanu aplikacji w zależności od poprzedniego stanu
-    // this.setState(({ showModal }) => {
-    //   return { showModal: !showModal };
-    // });
     this.setState({
       showModal: false,
       largeImageURL: '',
@@ -146,7 +140,7 @@ export class App extends Component {
         )}
 
         {/* Galeria obrazków */}
-        <ImageGallery togleModal={this.openModal} images={images} />
+        <ImageGallery toggleModal={this.openModal} images={images} />
 
         {/* Wskaźnik ładowania */}
         {loading && <Loader />}
@@ -161,12 +155,6 @@ export class App extends Component {
         {/* Przycisk "Load more" */}
         {total / 12 > page && <Button clickLoad={this.clickLoad} />}
 
-        {/* Modal */}
-        {/* {this.state.showModal && (
-          <Modal closeModal={this.closeModal}>
-            <img src={this.state.largeImageURL} alt={this.state.alt} />
-          </Modal> */}
-        {/* )} */}
         <Modal
           showModal={showModal}
           closeModal={this.closeModal}

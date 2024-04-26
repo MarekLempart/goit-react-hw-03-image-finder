@@ -12,9 +12,6 @@ export class Searchbar extends Component {
       search: '', // Inicjalizacja stanu search
     };
   }
-  // stale = {
-  //   search: '',
-  // };
 
   onChangeInput = evt => {
     const { name, value } = evt.currentTarget;
@@ -34,23 +31,19 @@ export class Searchbar extends Component {
             evt.preventDefault();
             if (!search) {
               // Sprawdzenie, czy search nie jest pusty
-              // if (!this.state.search) {
               return toast.error('Enter text for seatch.');
             }
             this.props.handleSubmit(search);
-            // this.props.handleSubmit(this.state.search);
             this.resetForm();
           }}
           className={css.SearchForm}
         >
           <button type="submit" className={css.SearchFormButton}>
             <BiSearch size="20" />
-            {/* <span class="button-label">Search</span> */}
           </button>
 
           <input
             value={search}
-            // value={this.state.search}
             onChange={this.onChangeInput}
             className={css.SearchFormInput}
             name="search"
